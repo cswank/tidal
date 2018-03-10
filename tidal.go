@@ -72,11 +72,11 @@ func (t *Tidal) GetAlbumTracks(id string) ([]Track, error) {
 }
 
 // GetPlaylistTracks func
-func (t *Tidal) GetPlaylistTracks(id string) ([]Track, error) {
+func (t *Tidal) GetPlaylistTracks(id string, l string) ([]Track, error) {
 	var s struct {
 		Items []Track `json:"items"`
 	}
-	return s.Items, t.get("playlists/"+id+"/tracks", &url.Values{}, &s)
+	return s.Items, t.get("playlists/"+id+"/tracks", &url.Values{"limit": {l}}, &s)
 }
 
 // SearchTracks func
@@ -115,6 +115,11 @@ func (t *Tidal) GetArtistAlbums(artist, l string) ([]Album, error) {
 	return s.Items, t.get(fmt.Sprintf("artists/%s/albums", artist), &url.Values{
 		"limit": {l},
 	}, &s)
+}
+
+func (t *Tidal) GetUserPlaylists() ([]Album, error) {
+	var s Search
+	return s.Items, t.get(fmt.Sprintf("users/%s/playlists", t.UserID), &url.Values{}, &s)
 }
 
 // helper function to generate a uuid
