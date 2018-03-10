@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"time"
 )
 
 const baseurl = "https://api.tidalhifi.com/v1/"
@@ -38,12 +39,12 @@ func (t *Tidal) get(dest string, query *url.Values, s interface{}) error {
 }
 
 func (t *Tidal) CheckSession() (bool, error) {
-	//if self.user is None or not self.user.id or not self.session_id:
-	//return False
-	var out interface{}
-	err := t.get(fmt.Sprintf("users/%s/subscription", t.UserID), nil, &out)
-	fmt.Println(out)
-	return true, err
+	var out struct {
+		ValidUntil string `json:"validUntil"`
+		Status     string `json:"status"`
+	}
+	err := t.get(fmt.Sprintf("users/%s/subscription", t.UserID), &url.Values{}, &out)
+	return out.Status == "ACTIVE" && out.ValidUntil > time.Now().Format(time.RFC3339Nano), err
 }
 
 // GetStreamURL func
