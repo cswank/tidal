@@ -58,11 +58,6 @@ func (t *Tidal) GetStreamURL(id, q string) (string, error) {
 	return s.URL, err
 }
 
-func (t *Tidal) GetUserPlaylists() ([]Album, error) {
-	var s Search
-	return s.Items, t.get(fmt.Sprintf("users/%s/playlists", t.UserID), &url.Values{}, &s)
-}
-
 // GetAlbumTracks func
 func (t *Tidal) GetAlbumTracks(id string) ([]Track, error) {
 	var s struct {
