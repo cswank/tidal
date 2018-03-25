@@ -112,6 +112,15 @@ func (t *Tidal) GetArtistAlbums(artist, l string) ([]Album, error) {
 	}, &s)
 }
 
+// SearchArtistTracks func
+func (t *Tidal) GetArtistTracks(artist, l string) ([]Track, error) {
+	var s Search
+	return s.Tracks.Items, t.get(fmt.Sprintf("artists/%s/toptracks", artist), &url.Values{
+		"limit":  {l},
+		"filter": {"ALL"},
+	}, &s.Tracks)
+}
+
 func (t *Tidal) GetUserPlaylists() ([]Album, error) {
 	var s Search
 	return s.Items, t.get(fmt.Sprintf("users/%s/playlists", t.UserID), &url.Values{}, &s)
